@@ -28,7 +28,7 @@ public class Spieler {
 		}
 	}
 
-	public int rutschen(int augenzahl) { //pr�fe, welche Spielfiguren gerutscht werden k�nnen, rutsche wenn m�glich
+	public int rutschen(int augenzahl) { //prüfe, welche Spielfiguren gerutscht werden können, rutsche wenn möglich
 
 		HashMap<Integer, Integer> figurenStatus = pruefeFiguren(augenzahl);
 
@@ -49,22 +49,22 @@ public class Spieler {
 
 		int neuesFeld = -99;
 		if (figuren == true) {
-			GUI.zeigeText(augenzahl + " gew�rfelt! Welche Spielfigur rutschen? Anklicken zum Ausw�hlen...");
+			GUI.zeigeText(augenzahl + " gewürfelt! Welche Spielfigur rutschen? Anklicken zum Auswählen...");
 			do {
 				int figurnummer = GUI.welcheSpielfigur(spielernummer);
 				int figurStatus = pruefeFiguren(augenzahl).get(figurnummer);
 				switch (figurStatus) {
 				case -1:
-					GUI.zeigeText("Spielfigur steht im Startbereich! Andere Figur ausw�hlen...");
+					GUI.zeigeText("Spielfigur steht im Startbereich! Andere Figur auswählen...");
 					break;
 				case 9:
-					GUI.zeigeText("Auf dem Feld steht bereits ein eigener Spielstein Andere Figur ausw�hlen...");
+					GUI.zeigeText("Auf dem Feld steht bereits ein eigener Spielstein Andere Figur auswählen...");
 					break;
 				case 99:
-					GUI.zeigeText("Im Ziel kann nicht �berholt werden! Andere Figur ausw�hlen...");
+					GUI.zeigeText("Im Ziel kann nicht überholt werden! Andere Figur auswählen...");
 					break;
 				case 999:
-					GUI.zeigeText("Augenzahl ist zu gro�! Andere Figur ausw�hlen...");
+					GUI.zeigeText("Augenzahl ist zu groß! Andere Figur auswählen...");
 					break;
 				default:
 					neuesFeld = setzeFigur(augenzahl, figurnummer);
@@ -77,19 +77,19 @@ public class Spieler {
 
 	}
 
-	private int ausruecken() { //pr�fe, ob Spielfiguren ausger�ckt werden k�nnen, r�cke aus wenn m�glich 
+	private int ausruecken() { //prüfe, ob Spielfiguren ausgerückt werden können, rücke aus wenn möglich
 
 		int neuesFeld = -99;
 		int figurnummer = 0;
 
-		GUI.zeigeText("6 Gew�rfelt! Welche Spielfigur ausr�cken? Anklicken zum Ausw�hlen...");
+		GUI.zeigeText("6 Gewürfelt! Welche Spielfigur ausrücken? Anklicken zum Auswählen...");
 		do {
 
 			figurnummer = GUI.welcheSpielfigur(spielernummer);
 			Spielfigur spielfigur = spielfiguren.get(figurnummer);
 
 			if (pruefeFigur(spielernummer * 10, figurnummer) != -1) {
-				GUI.zeigeText("Spielfigur steht nicht im Startbereich! Andere Figur ausw�hlen...");
+				GUI.zeigeText("Spielfigur steht nicht im Startbereich! Andere Figur auswählen...");
 			} else {
 				neuesFeld = spielfigur.ausRuecken();
 			}
@@ -99,9 +99,9 @@ public class Spieler {
 		return neuesFeld;
 	}
 
-	public int nachausruecken() { //Nach ausr�cken nochmal w�rfeln und Spielfigur vom Startfeld rutschen
+	public int nachausruecken() { //Nach ausrücken nochmal würfeln und Spielfigur vom Startfeld rutschen
 
-		GUI.zeigeText("Nochmal w�rfeln und vom Start runter...");
+		GUI.zeigeText("Nochmal würfeln und vom Start runter...");
 		int augenzahl = Wuerfel.einmalWuerfeln();
 
 		HashMap<Integer, Integer> figurenStatus = pruefeFiguren(augenzahl);
@@ -141,7 +141,7 @@ public class Spieler {
 		return neuesFeld;
 	}
 
-	private HashMap<Integer, Integer> pruefeFiguren(int augenzahl) { //pr�fe alle Figuren
+	private HashMap<Integer, Integer> pruefeFiguren(int augenzahl) { //prüfe alle Figuren
 		HashMap<Integer, Integer> figurenStatus = new HashMap<Integer, Integer>();
 		for (int i = 1; i <= 4; i++) {
 			figurenStatus.put(i, pruefeFigur(augenzahl, i));
@@ -149,7 +149,7 @@ public class Spieler {
 		return figurenStatus;
 	}
 
-	private int pruefeFigur(int augenzahl, int figurnummer) { //pr�fe, Figur, ob sie gerutscht werden kann und evtl. warum nicht
+	private int pruefeFigur(int augenzahl, int figurnummer) { //prüfe, Figur, ob sie gerutscht werden kann und evtl. warum nicht
 
 		Spielfigur spielfigur = spielfiguren.get(figurnummer);
 		int neuesFeld = spielfigur.berechneNeuesFeld(augenzahl);
@@ -183,7 +183,7 @@ public class Spieler {
 
 	}
 
-	public boolean dreimalWuerfeln() { //pr�fe, ob Spieler dreimal w�rfeln darf (wenn einzige M�glichkeit weiterzuspielen = Spielstein ausr�cken)
+	public boolean dreimalWuerfeln() { //prüfe, ob Spieler dreimal würfeln darf (wenn einzige Möglichkeit weiterzuspielen = Spielstein ausrücken)
 		int zielFeld = spielernummer * 10 + 103;
 		int imZiel = 0;
 		int imStart = 0;
@@ -203,7 +203,7 @@ public class Spieler {
 		}
 	}
 
-	public boolean pruefeBeendet() { //pr�fe, ob Spieler im Ziel ist
+	public boolean pruefeBeendet() { //prüfe, ob Spieler im Ziel ist
 		int figurenImZiel = 0;
 		for (int spielFigurNummer : spielfiguren.keySet()) {
 			Spielfigur spielfigur = spielfiguren.get(spielFigurNummer);

@@ -449,7 +449,7 @@ public class GUI {
 
 	}
 	
-	public static void warteAufBeenden() { //Best�tigung des Spielers
+	public static void warteAufBeenden() { //Bestätigung des Spielers
 		Canvas beenden = new Canvas(shlMaedn, SWT.TRANSPARENT);
 		beenden.setBounds(350, 350, 100, 100);
 		beenden.addPaintListener(new PaintListener() {
@@ -483,7 +483,7 @@ public class GUI {
 		}
 	}
 	
-	public static void warteAufWuerfel() { //Aktion des Spielers vor w�rfeln
+	public static void warteAufWuerfel() { //Aktion des Spielers vor würfeln
 		Canvas wuerfel = new Canvas(shlMaedn, SWT.TRANSPARENT);
 		wuerfel.setBounds(350, 350, 100, 100);
 		wuerfel.addPaintListener(new PaintListener() {
@@ -518,7 +518,7 @@ public class GUI {
 		}
 	}
 
-	public static void zeigeAugenzahl(int augenzahl) { //zeige gew�rfelte Augenzahl an
+	public static void zeigeAugenzahl(int augenzahl) { //zeige gewürfelte Augenzahl an
 		Canvas wuerfel = new Canvas(shlMaedn, SWT.TRANSPARENT);
 		wuerfel.setBounds(375, 375, 50, 50);
 		wuerfel.addPaintListener(new PaintListener() {
@@ -662,7 +662,7 @@ public class GUI {
 		return letzteAusgewaehlteFigur;
 	}
 
-	public static void ende(HashMap<Integer, String> plaetze) { //Spielende, zeige Pl�tze an
+	public static void ende(HashMap<Integer, String> plaetze) { //Spielende, zeige Plätze an
 		shlMaedn.setBackgroundImage(null);
 		for (int spielfigurnummer : spielfiguren.keySet()) {
 			spielfiguren.get(spielfigurnummer).dispose();

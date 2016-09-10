@@ -20,7 +20,7 @@ public class Spielfigur {
 		return this.feldnummer;
 	}
 
-	public boolean rauswerfen() { //setze Figur in Startbereich zur�ck
+	public boolean rauswerfen() { //setze Figur in Startbereich zurück
 		this.feldnummer = (spielernummer * 10 + figurnummer) * -1;
 		GUI.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
 		return true;
