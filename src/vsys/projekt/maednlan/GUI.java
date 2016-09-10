@@ -1,5 +1,7 @@
 package vsys.projekt.maednlan;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
@@ -8,7 +10,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -30,10 +31,8 @@ public class GUI {
 	static Label lblMaedn;
 	static HashMap<Integer, Canvas> spielfiguren = new HashMap<Integer, Canvas>();
 	static Text textfeld;
+    static Table playerTable;
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	public static void oeffneFenster() { //zeige Willkommensbildschirm
 
 		display = Display.getDefault();
@@ -78,6 +77,146 @@ public class GUI {
 				SWTResourceManager.getImage("img\\Spielfeld.png"));
 	}
 
+	public static boolean server(){
+
+        zeigeText("Als Server oder Client spielen?");
+
+        Button radio1 = new Button(shlMaedn, SWT.RADIO);
+        radio1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+        radio1.setText("Spiel hosten");
+        radio1.setBounds(285, 488, 170, 42);
+
+        Button radio2 = new Button(shlMaedn, SWT.RADIO);
+        radio2.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+        radio2.setText("Zu Spiel verbinden");
+        radio2.setBounds(285, 520, 170, 42);
+
+        Button btnOk = new Button(shlMaedn, SWT.NONE);
+        btnOk.setBounds(478, 510, 28, 25);
+        btnOk.setText("OK");
+
+        btnOk.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event e) {
+                switch (e.type) {
+                    case SWT.Selection:
+                        if(!radio1.getSelection() && !radio2.getSelection()){
+                            zeigeText("Bitte eine Auswahl treffen!");
+                        } else {
+                            btnOk.dispose();
+                        }
+                        break;
+                }
+            }
+        });
+
+        while (!btnOk.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+
+        boolean server = radio1.getSelection();
+        radio1.dispose();
+        radio2.dispose();
+
+        return server;
+    }
+
+    public static void zeigeSpieler(String eigenerName) {
+        String ip = "127.0.0.1";
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+            zeigeText("Warte auf weitere Spieler... | Servername: " + InetAddress.getLocalHost().getHostName() + " |  IP: " + ip);
+        } catch (UnknownHostException e) {
+            zeigeText("Warte auf weitere Spieler... | Fehler beim Anzeigen der Servadresse!");
+        }
+
+        playerTable = new Table(shlMaedn, SWT.BORDER | SWT.FULL_SELECTION);
+        playerTable.setBounds(269, 422, 264, 161);
+        playerTable.setHeaderVisible(true);
+        playerTable.setLinesVisible(true);
+
+
+        TableColumn column = new TableColumn(playerTable, SWT.NONE);
+        column.setText("Spielername");
+
+        TableItem item = new TableItem(playerTable, SWT.NULL);
+        item.setText(0, eigenerName);
+        playerTable.getColumn(0).pack();
+
+        if (!display.readAndDispatch()) {
+            display.sleep();
+        }
+    }
+
+    public static void neuerSpieler(String spielerName) {
+        TableItem item = new TableItem(playerTable, SWT.NULL);
+        item.setText(0, spielerName);
+        playerTable.getColumn(0).pack();
+
+        if (!display.readAndDispatch()) {
+            display.sleep();
+        }
+    }
+
+    public static void button() {
+        Button btnOk = new Button(shlMaedn, SWT.NONE);
+        btnOk.setBounds(269, 600, 28, 25);
+        btnOk.setText("OK");
+
+        btnOk.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event e) {
+                switch (e.type) {
+                    case SWT.Selection:
+                        btnOk.dispose();
+                        break;
+                }
+            }
+        });
+
+        while (!btnOk.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+
+        playerTable.dispose();
+    }
+
+    public static String holeServerAdresse() {
+        zeigeText("Serveradresse eingeben...");
+
+        Button button = new Button(shlMaedn, SWT.NONE);
+        button.setText("OK");
+        button.setBounds(475, 434, 28, 25);
+
+        Text serverAdresseText;
+        serverAdresseText = new Text(shlMaedn, SWT.BORDER);
+        serverAdresseText.setBounds(272, 436, 183, 21);
+
+        button.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event e) {
+                switch (e.type) {
+                    case SWT.Selection:
+                        button.dispose();
+                        break;
+                }
+            }
+        });
+
+        while (!button.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+
+        String serverAdresse = serverAdresseText.getText();
+        serverAdresseText.dispose();
+
+        return serverAdresse;
+    }
+
+    /*
 	public static int holeSpielerAnzahl() { //Abfrage Spieleranzahl
 
 		GUI.zeigeText("Wie viele Spieler?");
@@ -110,8 +249,6 @@ public class GUI {
 		btnOk.setBounds(478, 488, 28, 25);
 		btnOk.setText("OK");
 
-		int spielerAnzahl = spielerAnzahlScale.getSelection();
-
 		btnOk.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				switch (e.type) {
@@ -137,11 +274,10 @@ public class GUI {
 
 		return spielerAnzahl;
 	}
+	*/
 
-	public static String holeSpielerName(int spielernummer) { //Abfrage Spielername
-		GUI.zeigeText("Spieler " + spielernummer + ": Trage deinen Namen ein!");
-
-		String spielerName = "Spieler " + spielernummer;
+	public static String holeSpielerName() { //Abfrage Spielername
+		GUI.zeigeText("Trage deinen Namen ein!");
 
 		Button button = new Button(shlMaedn, SWT.NONE);
 		button.setText("OK");
@@ -167,7 +303,7 @@ public class GUI {
 			}
 		}
 
-		spielerName = nameSpielerText.getText();
+		String spielerName = nameSpielerText.getText();
 		nameSpielerText.dispose();
 
 		return spielerName;
@@ -705,4 +841,6 @@ public class GUI {
 		}
 		display.dispose();
 	}
+
+
 }

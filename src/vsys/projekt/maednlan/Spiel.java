@@ -1,15 +1,29 @@
 package vsys.projekt.maednlan;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 
 public class Spiel {
 
-	static int spielerAnzahl = 0;
+    static String spielerName = "Spieler";
+    static boolean server = false;
+    static Socket socket;
+
+	static int spielerAnzahl = 1;
 	static HashMap<Integer, Spieler> spieler = new HashMap<Integer, Spieler>();
 	static HashMap<Integer, String> plaetze = new HashMap<Integer, String>();
 
+    static BufferedReader in;
+    static PrintWriter out;
+
+
 	//Spieleinstieg
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		GUI.oeffneFenster(); //Spielfenster öffnen
 		erzeugeSpieler(); //Spieleranzahl und Namen holen, Spiel vorbereiten
@@ -17,14 +31,38 @@ public class Spiel {
 		spielAblauf(); //Ablauf des Spiels
 	}
 
-	private static void erzeugeSpieler() {
+	private static void erzeugeSpieler() throws IOException {
 
-		spielerAnzahl = GUI.holeSpielerAnzahl();
+		spielerName = GUI.holeSpielerName();
+		server = GUI.server();
+		if(server) {
+			ServerSocket listener = new ServerSocket(8901);
+			GUI.zeigeSpieler(spielerName);
+
+            socket = listener.accept();
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+
+            GUI.neuerSpieler(in.readLine());
+            spielerAnzahl++;
+
+            GUI.button();
+
+            out.println("START");
+		} else {
+			String serverAdresse = GUI.holeServerAdresse();
+            GUI.zeigeText("Warte auf Start...");
+            socket = new Socket(serverAdresse, 8901);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(spielerName);
+            while(!in.readLine().equals("START"));
+		}
+
 
 		for (int i = 1; i <= spielerAnzahl; i++) {
 			spieler.put(i, new Spieler(i));
 		}
-
 	}
 
 	private static void spielAblauf() {

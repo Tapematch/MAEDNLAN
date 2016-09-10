@@ -12,11 +12,13 @@ public class Spieler {
 	public Spieler(int spielernummer) { //erzeuge Spieler mit Name
 
 		this.spielernummer = spielernummer;
+		/*
 		String spielername = GUI.holeSpielerName(spielernummer);
 		if (spielername == null || spielername.equals("")) {
 			spielername = "Spieler " + spielernummer;
 		}
 		this.name = spielername;
+		*/
 		GUI.zeigeText("Name Spieler " + spielernummer + ": " + name);
 		erzeugeSpielfiguren();
 	}
