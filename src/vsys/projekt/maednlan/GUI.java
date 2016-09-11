@@ -32,6 +32,7 @@ public class GUI {
 	static HashMap<Integer, Canvas> spielfiguren = new HashMap<Integer, Canvas>();
 	static Text textfeld;
     static Table playerTable;
+	static Canvas wuerfel;
 
 	public static void oeffneFenster() { //zeige Willkommensbildschirm
 
@@ -62,6 +63,9 @@ public class GUI {
 
 	public static void zeigeText(String text) { //Zeige vorgegebenen Text im Statustextfeld an
 		textfeld.setText(text);
+		if (!display.readAndDispatch()) {
+			display.sleep();
+		}
 	}
 
 	public static void zeigeSpielfeld() { //zeige vorbereitetes Spielfeld an
@@ -75,6 +79,10 @@ public class GUI {
 
 		shlMaedn.setBackgroundImage(
 				SWTResourceManager.getImage("img\\Spielfeld.png"));
+
+		if (!display.readAndDispatch()) {
+			display.sleep();
+		}
 	}
 
 	public static boolean server(){
@@ -216,66 +224,6 @@ public class GUI {
         return serverAdresse;
     }
 
-    /*
-	public static int holeSpielerAnzahl() { //Abfrage Spieleranzahl
-
-		GUI.zeigeText("Wie viele Spieler?");
-
-		Label label = new Label(shlMaedn, SWT.NONE);
-		label.setBounds(293, 467, 18, 15);
-		label.setText("1");
-
-		Label label_1 = new Label(shlMaedn, SWT.NONE);
-		label_1.setText("2");
-		label_1.setBounds(342, 467, 18, 15);
-
-		Label label_2 = new Label(shlMaedn, SWT.NONE);
-		label_2.setText("3");
-		label_2.setBounds(389, 467, 18, 15);
-
-		Label label_3 = new Label(shlMaedn, SWT.NONE);
-		label_3.setText("4");
-		label_3.setBounds(437, 467, 18, 15);
-
-		Scale spielerAnzahlScale = new Scale(shlMaedn, SWT.NONE);
-		spielerAnzahlScale.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		spielerAnzahlScale.setPageIncrement(1);
-		spielerAnzahlScale.setMaximum(4);
-		spielerAnzahlScale.setMinimum(1);
-		spielerAnzahlScale.setSelection(1);
-		spielerAnzahlScale.setBounds(285, 488, 170, 42);
-
-		Button btnOk = new Button(shlMaedn, SWT.NONE);
-		btnOk.setBounds(478, 488, 28, 25);
-		btnOk.setText("OK");
-
-		btnOk.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				switch (e.type) {
-				case SWT.Selection:
-					btnOk.dispose();
-					break;
-				}
-			}
-		});
-
-		while (!btnOk.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-
-		spielerAnzahl = spielerAnzahlScale.getSelection();
-		spielerAnzahlScale.dispose();
-		label.dispose();
-		label_1.dispose();
-		label_2.dispose();
-		label_3.dispose();
-
-		return spielerAnzahl;
-	}
-	*/
-
 	public static String holeSpielerName() { //Abfrage Spielername
 		GUI.zeigeText("Trage deinen Namen ein!");
 
@@ -352,6 +300,8 @@ public class GUI {
 	 * 1 			--> Feldnummer
 	 */
 	public static void setzeSpielfigur(int spielernummer, int figurnummer, int feldnummer) {
+		if(wuerfel != null && !wuerfel.isDisposed())
+			wuerfel.dispose();
 		Canvas spielfigur = spielfiguren.get(spielernummer * 10 + figurnummer);
 		switch (feldnummer) {
 		case -11:
@@ -586,6 +536,8 @@ public class GUI {
 	}
 	
 	public static void warteAufBeenden() { //Bestätigung des Spielers
+		if(wuerfel != null && !wuerfel.isDisposed())
+			wuerfel.dispose();
 		Canvas beenden = new Canvas(shlMaedn, SWT.TRANSPARENT);
 		beenden.setBounds(350, 350, 100, 100);
 		beenden.addPaintListener(new PaintListener() {
@@ -620,7 +572,9 @@ public class GUI {
 	}
 	
 	public static void warteAufWuerfel() { //Aktion des Spielers vor würfeln
-		Canvas wuerfel = new Canvas(shlMaedn, SWT.TRANSPARENT);
+		if(wuerfel != null && !wuerfel.isDisposed())
+			wuerfel.dispose();
+		wuerfel = new Canvas(shlMaedn, SWT.TRANSPARENT);
 		wuerfel.setBounds(350, 350, 100, 100);
 		wuerfel.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
@@ -655,7 +609,9 @@ public class GUI {
 	}
 
 	public static void zeigeAugenzahl(int augenzahl) { //zeige gewürfelte Augenzahl an
-		Canvas wuerfel = new Canvas(shlMaedn, SWT.TRANSPARENT);
+		if(wuerfel != null && !wuerfel.isDisposed())
+			wuerfel.dispose();
+		wuerfel = new Canvas(shlMaedn, SWT.TRANSPARENT);
 		wuerfel.setBounds(375, 375, 50, 50);
 		wuerfel.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
@@ -695,6 +651,12 @@ public class GUI {
 			}
 		});
 
+		if (!display.readAndDispatch()) {
+			display.sleep();
+		}
+	}
+
+	public static void warteWuerfelKlick(){
 		wuerfel.addMouseListener(new MouseListener() {
 
 			@Override

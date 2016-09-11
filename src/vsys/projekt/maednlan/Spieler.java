@@ -10,10 +10,8 @@ public class Spieler {
 	HashMap<Integer, Spielfigur> spielfiguren = new HashMap<Integer, Spielfigur>();
 
 	public Spieler(int spielernummer, String spielername) { //erzeuge Spieler mit Name
-
 		this.spielernummer = spielernummer;
 		this.name = spielername;
-		GUI.zeigeText("Name Spieler " + spielernummer + ": " + name);
 		erzeugeSpielfiguren();
 	}
 
@@ -45,22 +43,22 @@ public class Spieler {
 
 		int neuesFeld = -99;
 		if (figuren == true) {
-			GUI.zeigeText(augenzahl + " gewürfelt! Welche Spielfigur rutschen? Anklicken zum Auswählen...");
+			Netzwerk.zeigeText(augenzahl + " gewürfelt! Welche Spielfigur rutschen? Anklicken zum Auswählen...");
 			do {
-				int figurnummer = GUI.welcheSpielfigur(spielernummer);
+				int figurnummer = Netzwerk.welcheSpielfigur(spielernummer);
 				int figurStatus = pruefeFiguren(augenzahl).get(figurnummer);
 				switch (figurStatus) {
 				case -1:
-					GUI.zeigeText("Spielfigur steht im Startbereich! Andere Figur auswählen...");
+					Netzwerk.zeigeText("Spielfigur steht im Startbereich! Andere Figur auswählen...");
 					break;
 				case 9:
-					GUI.zeigeText("Auf dem Feld steht bereits ein eigener Spielstein Andere Figur auswählen...");
+					Netzwerk.zeigeText("Auf dem Feld steht bereits ein eigener Spielstein. Andere Figur auswählen...");
 					break;
 				case 99:
-					GUI.zeigeText("Im Ziel kann nicht überholt werden! Andere Figur auswählen...");
+					Netzwerk.zeigeText("Im Ziel kann nicht überholt werden! Andere Figur auswählen...");
 					break;
 				case 999:
-					GUI.zeigeText("Augenzahl ist zu groß! Andere Figur auswählen...");
+					Netzwerk.zeigeText("Augenzahl ist zu groß! Andere Figur auswählen...");
 					break;
 				default:
 					neuesFeld = setzeFigur(augenzahl, figurnummer);
@@ -78,14 +76,14 @@ public class Spieler {
 		int neuesFeld = -99;
 		int figurnummer = 0;
 
-		GUI.zeigeText("6 Gewürfelt! Welche Spielfigur ausrücken? Anklicken zum Auswählen...");
+		Netzwerk.zeigeText("6 Gewürfelt! Welche Spielfigur ausrücken? Anklicken zum Auswählen...");
 		do {
 
-			figurnummer = GUI.welcheSpielfigur(spielernummer);
+			figurnummer = Netzwerk.welcheSpielfigur(spielernummer);
 			Spielfigur spielfigur = spielfiguren.get(figurnummer);
 
 			if (pruefeFigur(spielernummer * 10, figurnummer) != -1) {
-				GUI.zeigeText("Spielfigur steht nicht im Startbereich! Andere Figur auswählen...");
+				Netzwerk.zeigeText("Spielfigur steht nicht im Startbereich! Andere Figur auswählen...");
 			} else {
 				neuesFeld = spielfigur.ausRuecken();
 			}
@@ -97,8 +95,8 @@ public class Spieler {
 
 	public int nachausruecken() { //Nach ausrücken nochmal würfeln und Spielfigur vom Startfeld rutschen
 
-		GUI.zeigeText("Nochmal würfeln und vom Start runter...");
-		int augenzahl = Wuerfel.einmalWuerfeln();
+		Netzwerk.zeigeText("Nochmal würfeln und vom Start runter...");
+		int augenzahl = Wuerfel.einmalWuerfeln(spielernummer);
 
 		HashMap<Integer, Integer> figurenStatus = pruefeFiguren(augenzahl);
 

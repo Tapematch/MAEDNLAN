@@ -10,19 +10,19 @@ public class Spielfigur {
 		this.spielernummer = spielernummer;
 		this.figurnummer = figurnummer;
 		this.feldnummer = (spielernummer * 10 + figurnummer) * -1;
-		GUI.erzeugeSpielfigur(spielernummer, figurnummer);
-		GUI.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
+		Netzwerk.erzeugeSpielfigur(spielernummer, figurnummer);
+		Netzwerk.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
 	}
 
 	public int ausRuecken() { //setze Feldnummer auf Startfeld
 		this.feldnummer = this.spielernummer * 10;
-		GUI.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
+		Netzwerk.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
 		return this.feldnummer;
 	}
 
 	public boolean rauswerfen() { //setze Figur in Startbereich zurück
 		this.feldnummer = (spielernummer * 10 + figurnummer) * -1;
-		GUI.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
+		Netzwerk.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
 		return true;
 	}
 
@@ -48,7 +48,7 @@ public class Spielfigur {
 
 	public void setzeNeuesFeld(int neuesFeld) { //setze neue Feldnummer
 		this.feldnummer = neuesFeld;
-		GUI.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
+		Netzwerk.setzeSpielfigur(spielernummer, figurnummer, feldnummer);
 	}
 
 }
