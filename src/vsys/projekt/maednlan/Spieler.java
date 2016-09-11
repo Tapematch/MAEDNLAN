@@ -9,16 +9,10 @@ public class Spieler {
 	boolean beendet = false;
 	HashMap<Integer, Spielfigur> spielfiguren = new HashMap<Integer, Spielfigur>();
 
-	public Spieler(int spielernummer) { //erzeuge Spieler mit Name
+	public Spieler(int spielernummer, String spielername) { //erzeuge Spieler mit Name
 
 		this.spielernummer = spielernummer;
-		/*
-		String spielername = GUI.holeSpielerName(spielernummer);
-		if (spielername == null || spielername.equals("")) {
-			spielername = "Spieler " + spielernummer;
-		}
 		this.name = spielername;
-		*/
 		GUI.zeigeText("Name Spieler " + spielernummer + ": " + name);
 		erzeugeSpielfiguren();
 	}

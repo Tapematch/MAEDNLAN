@@ -159,7 +159,7 @@ public class GUI {
         }
     }
 
-    public static void button() {
+    public static void okButton() {
         Button btnOk = new Button(shlMaedn, SWT.NONE);
         btnOk.setBounds(269, 600, 28, 25);
         btnOk.setText("OK");
