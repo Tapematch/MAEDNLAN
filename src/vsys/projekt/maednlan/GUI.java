@@ -5,22 +5,12 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 
 public class GUI {
 
@@ -33,6 +23,68 @@ public class GUI {
 	static Text textfeld;
     static Table playerTable;
 	static Canvas wuerfel;
+
+	public static void executeAsync(Runnable function){
+		display.asyncExec(function);
+	}
+
+	public static int holeSpielerAnzahl() { //Abfrage Spieleranzahl
+
+		GUI.zeigeText("Wie viele Spieler?");
+
+		Label label = new Label(shlMaedn, SWT.NONE);
+		label.setBounds(293, 467, 18, 15);
+		label.setText("1");
+
+		Label label_1 = new Label(shlMaedn, SWT.NONE);
+		label_1.setText("2");
+		label_1.setBounds(342, 467, 18, 15);
+
+		Label label_2 = new Label(shlMaedn, SWT.NONE);
+		label_2.setText("3");
+		label_2.setBounds(389, 467, 18, 15);
+
+		Label label_3 = new Label(shlMaedn, SWT.NONE);
+		label_3.setText("4");
+		label_3.setBounds(437, 467, 18, 15);
+
+		Scale spielerAnzahlScale = new Scale(shlMaedn, SWT.NONE);
+		spielerAnzahlScale.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		spielerAnzahlScale.setPageIncrement(1);
+		spielerAnzahlScale.setMaximum(4);
+		spielerAnzahlScale.setMinimum(1);
+		spielerAnzahlScale.setSelection(1);
+		spielerAnzahlScale.setBounds(285, 488, 170, 42);
+
+		Button btnOk = new Button(shlMaedn, SWT.NONE);
+		btnOk.setBounds(478, 488, 28, 25);
+		btnOk.setText("OK");
+
+		btnOk.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+					case SWT.Selection:
+						btnOk.dispose();
+						break;
+				}
+			}
+		});
+
+		while (!btnOk.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+
+		int spielerAnzahl = spielerAnzahlScale.getSelection();
+		spielerAnzahlScale.dispose();
+		label.dispose();
+		label_1.dispose();
+		label_2.dispose();
+		label_3.dispose();
+
+		return spielerAnzahl;
+	}
 
 	public static void oeffneFenster() { //zeige Willkommensbildschirm
 

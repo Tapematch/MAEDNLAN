@@ -24,6 +24,7 @@ public class Spiel {
 	static HashMap<Integer, BufferedReader> clientIn = new HashMap<>();
 	static HashMap<Integer, PrintWriter> clientOut = new HashMap<>();
 
+	static int spielerzahl;
 
 	//Spieleinstieg
 	public static void main(String[] args) {
@@ -40,22 +41,27 @@ public class Spiel {
 		spielerName = GUI.holeSpielerName();
 		server = GUI.server();
 		if(server) {
+			spielerzahl = GUI.holeSpielerAnzahl();
 			ServerSocket listener = new ServerSocket(8901);
 			GUI.zeigeSpieler(spielerName);
+			spieler.put(1, new Spieler(1, spielerName));
 
+			while (spieler.size() < spielerzahl){
+				Socket clientSocket = listener.accept();
+				spielerAnzahl++;
+				clientIn.put(spielerAnzahl, new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
+				clientOut.put(spielerAnzahl, new PrintWriter(clientSocket.getOutputStream(), true));
+				String neuerSpielerName = clientIn.get(spielerAnzahl).readLine();
+				GUI.neuerSpieler(neuerSpielerName);
+				clientOut.get(spielerAnzahl).println(spielerAnzahl);
+				spieler.put(spielerAnzahl, new Spieler(spielerAnzahl, neuerSpielerName));
+			}
 
-			//TODO Schleife -> beliebig viele Spieler
-			Socket clientSocket = listener.accept();
-			spielerAnzahl++;
-			clientIn.put(spielerAnzahl, new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
-			clientOut.put(spielerAnzahl, new PrintWriter(clientSocket.getOutputStream(), true));
-			String neuerSpielerName = clientIn.get(spielerAnzahl).readLine();
-            GUI.neuerSpieler(neuerSpielerName);
-			clientOut.get(spielerAnzahl).println(spielerAnzahl);
-			spieler.put(spielerAnzahl, new Spieler(spielerAnzahl, neuerSpielerName));
+			for (Spieler sp : spieler.values()){
+				sp.erzeugeSpielfiguren();
+			}
 
-
-			spieler.put(1, new Spieler(1, spielerName)); //Spieler des Servers hinzufügen
+			 //Spieler des Servers hinzufügen
             GUI.okButton();
 
 			Netzwerk.zeigeSpielfeld();

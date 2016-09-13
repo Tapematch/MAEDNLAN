@@ -12,7 +12,6 @@ public class Spieler {
 	public Spieler(int spielernummer, String spielername) { //erzeuge Spieler mit Name
 		this.spielernummer = spielernummer;
 		this.name = spielername;
-		erzeugeSpielfiguren();
 	}
 
 	public void erzeugeSpielfiguren() { //erzeuge 4 Spielfiguren
