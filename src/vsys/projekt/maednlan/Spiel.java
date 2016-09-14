@@ -24,7 +24,10 @@ public class Spiel {
 	static HashMap<Integer, BufferedReader> clientIn = new HashMap<>();
 	static HashMap<Integer, PrintWriter> clientOut = new HashMap<>();
 
-	static int spielerzahl;
+	static boolean spielGestartet = false;
+	static boolean spielBeendet = false;
+
+	static ServerSocket listener;
 
 	//Spieleinstieg
 	public static void main(String[] args) {
@@ -41,43 +44,66 @@ public class Spiel {
 		spielerName = GUI.holeSpielerName();
 		server = GUI.server();
 		if(server) {
-			spielerzahl = GUI.holeSpielerAnzahl();
-			ServerSocket listener = new ServerSocket(8901);
+			listener = new ServerSocket(8901);
 			GUI.zeigeSpieler(spielerName);
 			spieler.put(1, new Spieler(1, spielerName));
 
-			while (spieler.size() < spielerzahl){
-				Socket clientSocket = listener.accept();
-				spielerAnzahl++;
-				clientIn.put(spielerAnzahl, new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
-				clientOut.put(spielerAnzahl, new PrintWriter(clientSocket.getOutputStream(), true));
-				String neuerSpielerName = clientIn.get(spielerAnzahl).readLine();
-				GUI.neuerSpieler(neuerSpielerName);
-				clientOut.get(spielerAnzahl).println(spielerAnzahl);
-				spieler.put(spielerAnzahl, new Spieler(spielerAnzahl, neuerSpielerName));
-			}
+			new Thread(() -> {
+				try {
+					warteAufSpieler();
+				} catch (IOException e) {
+					GUI.executeAsync(() -> GUI.zeigeText(e.getMessage()));
+				}
+			}).start();
+
+            GUI.okButton();
+			spielGestartet = true;
 
 			for (Spieler sp : spieler.values()){
 				sp.erzeugeSpielfiguren();
 			}
 
-			 //Spieler des Servers hinzufügen
-            GUI.okButton();
-
 			Netzwerk.zeigeSpielfeld();
 			spielAblauf(); //Ablauf des Spiels
 		} else {
-			String serverAdresse = GUI.holeServerAdresse();
-			GUI.zeigeText("Warte auf Start...");
-			Socket clientSocket = new Socket(serverAdresse, 8901);
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(spielerName);
-            spielernummer = Integer.parseInt(in.readLine());
+			GUI.zeigeText("Serveradresse eingeben...");
+			verbindeZuServer();
+		}
+	}
 
-			warteAufBefehle();
+	public static void verbindeZuServer(){
+		String serverAdresse = GUI.holeServerAdresse();
+		try {
+			Socket clientSocket = new Socket(serverAdresse, 8901);
+			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			out = new PrintWriter(clientSocket.getOutputStream(), true);
+			out.println(spielerName);
+			GUI.zeigeText("Warte auf Start...");
+			spielernummer = Integer.parseInt(in.readLine());
+		} catch (Exception ex){
+			GUI.zeigeText("Verbindung zum Server konnte nicht hergestellt werden: "
+					+ ex.getMessage()
+					+ " | Bitte neue Serveradresse eingeben.");
+			verbindeZuServer();
 		}
 
+		warteAufBefehle();
+	}
+
+	public static void warteAufSpieler() throws IOException {
+		while (!spielGestartet && spieler.size() < 4){
+			Socket clientSocket = listener.accept();
+
+			if (!spielGestartet){
+				spielerAnzahl++;
+				clientIn.put(spielerAnzahl, new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
+				clientOut.put(spielerAnzahl, new PrintWriter(clientSocket.getOutputStream(), true));
+				String neuerSpielerName = clientIn.get(spielerAnzahl).readLine();
+				GUI.executeAsync(() -> GUI.neuerSpieler(neuerSpielerName));
+				clientOut.get(spielerAnzahl).println(spielerAnzahl);
+				spieler.put(spielerAnzahl, new Spieler(spielerAnzahl, neuerSpielerName));
+			}
+		}
 	}
 
 	private static void spielAblauf(){
@@ -140,7 +166,7 @@ public class Spiel {
 	}
 
 	private static void warteAufBefehle(){
-		while (true){
+		while (!spielBeendet){
 			try {
 				String befehl = in.readLine();
 				if (befehl.startsWith("ZEIGESPIELFELD")) {

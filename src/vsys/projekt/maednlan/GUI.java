@@ -26,64 +26,7 @@ public class GUI {
 
 	public static void executeAsync(Runnable function){
 		display.asyncExec(function);
-	}
 
-	public static int holeSpielerAnzahl() { //Abfrage Spieleranzahl
-
-		GUI.zeigeText("Wie viele Spieler?");
-
-		Label label = new Label(shlMaedn, SWT.NONE);
-		label.setBounds(293, 467, 18, 15);
-		label.setText("1");
-
-		Label label_1 = new Label(shlMaedn, SWT.NONE);
-		label_1.setText("2");
-		label_1.setBounds(342, 467, 18, 15);
-
-		Label label_2 = new Label(shlMaedn, SWT.NONE);
-		label_2.setText("3");
-		label_2.setBounds(389, 467, 18, 15);
-
-		Label label_3 = new Label(shlMaedn, SWT.NONE);
-		label_3.setText("4");
-		label_3.setBounds(437, 467, 18, 15);
-
-		Scale spielerAnzahlScale = new Scale(shlMaedn, SWT.NONE);
-		spielerAnzahlScale.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		spielerAnzahlScale.setPageIncrement(1);
-		spielerAnzahlScale.setMaximum(4);
-		spielerAnzahlScale.setMinimum(1);
-		spielerAnzahlScale.setSelection(1);
-		spielerAnzahlScale.setBounds(285, 488, 170, 42);
-
-		Button btnOk = new Button(shlMaedn, SWT.NONE);
-		btnOk.setBounds(478, 488, 28, 25);
-		btnOk.setText("OK");
-
-		btnOk.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				switch (e.type) {
-					case SWT.Selection:
-						btnOk.dispose();
-						break;
-				}
-			}
-		});
-
-		while (!btnOk.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-
-		int spielerAnzahl = spielerAnzahlScale.getSelection();
-		spielerAnzahlScale.dispose();
-		label.dispose();
-		label_1.dispose();
-		label_2.dispose();
-		label_3.dispose();
-
-		return spielerAnzahl;
 	}
 
 	public static void oeffneFenster() { //zeige Willkommensbildschirm
@@ -244,8 +187,6 @@ public class GUI {
     }
 
     public static String holeServerAdresse() {
-        zeigeText("Serveradresse eingeben...");
-
         Button button = new Button(shlMaedn, SWT.NONE);
         button.setText("OK");
         button.setBounds(475, 434, 28, 25);
@@ -813,6 +754,8 @@ public class GUI {
 	}
 
 	public static void ende(HashMap<Integer, String> plaetze) { //Spielende, zeige Plätze an
+		Spiel.spielBeendet = true;
+
 		shlMaedn.setBackgroundImage(null);
 		for (int spielfigurnummer : spielfiguren.keySet()) {
 			spielfiguren.get(spielfigurnummer).dispose();
