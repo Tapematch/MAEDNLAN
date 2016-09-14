@@ -93,7 +93,7 @@ public class GUI {
 		shlMaedn.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		shlMaedn.setImage(SWTResourceManager.getImage("img\\FigurRot.png"));
 		shlMaedn.setSize(808, 851);
-		shlMaedn.setText("MAEDN");
+		shlMaedn.setText("MAEDNLAN");
 
 		textfeld = new Text(shlMaedn, SWT.BORDER); //Statustextfeld
 		textfeld.setBounds(0, 801, 802, 21);
