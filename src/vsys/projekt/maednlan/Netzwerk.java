@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-/**
- * Created by philt on 11.09.2016.
- */
 public class Netzwerk {
     public static void zeigeSpielfeld() {
         GUI.zeigeSpielfeld();
